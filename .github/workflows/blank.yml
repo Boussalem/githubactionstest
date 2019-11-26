@@ -26,3 +26,19 @@ jobs:
         name: webapp
         # Directory containing files to upload
         path: bin/Release/netcoreapp3.0/publish
+        
+  deploy:
+
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: webapp
+      - name: Deploy to Azure App Service
+        uses: azure/appservice-actions/webapp@master
+        with:
+          app-name: actionsSampleApp
+          package: webapp
+          publish-profile: ${{ secrets.dirtyWebappPublishProfile }}  
